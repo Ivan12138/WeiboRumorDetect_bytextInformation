@@ -48,6 +48,7 @@ def remove_punctuation(line):
     line = str(line)
     if line.strip() == '':
         return ''
+    #[^abc]表示除了abc的数
     rule = re.compile(u'[^a-zA-Z0-9\u4E00-\u9FA5]')
     line = rule.sub('', line)
     return line
@@ -59,7 +60,7 @@ def stopwords_list(filepath):
     :param filepath:
     :return:
     """
-    stopwords = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readline()]
+    stopwords = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
     return stopwords
 
 
@@ -76,16 +77,16 @@ def processTextFeature(csv_file):
     stopwords = stopwords_list(stopwords_file)
     rumor_df['seg_text'] = rumor_df['clean_text'].apply(
         lambda x: ' '.join([w for w in list(jieba.cut(x)) if w not in stopwords]))
+
+    #取pd序列中的值
     # print(rumor_df['seg_text'].head(5))
-    seg_text = rumor_df['seg_text']
-    x_feature = np.array(seg_text)
-    x_feature_list = x_feature.tolist()
+    x_feature = rumor_df['seg_text'].values
+
     # print(x_feature_list)
-    labels = rumor_df['label']
-    y_label = np.array(labels)
-    y_label_list = y_label.tolist()
+    y_label = rumor_df['label'].values
+
     # print(y_label_list)
-    return x_feature_list, y_label_list
+    return x_feature, y_label
     # return seg_text, labels
 
 

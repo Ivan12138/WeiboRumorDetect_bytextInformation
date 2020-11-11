@@ -9,6 +9,7 @@
 
 from pathlib import Path
 import json
+from sklearn.datasets import load_files
 import re
 
 analysis_root_dir = '../dataset/original-microblog/rumor/'
@@ -16,6 +17,8 @@ store_result = '../dataset/rumor.csv'
 
 # 读入目录下的所有文件，并标签为‘1’
 def parse_dir(root_dir):
+    #获取文件
+
     path = Path(root_dir)
     all_json_file = list(path.glob('*.json'))
     parse_result = []
@@ -25,6 +28,7 @@ def parse_dir(root_dir):
         with open(str(json_file), 'r', encoding='utf-8') as f:
             json_result = json.load(f)  # 加载每个文件
         json_result['label'] = 1  # 把每个文件加label标记为1
+        #经过下面的处理，数据类型变为[{},{}]为了下面将json文件写成一个文件做准备。
         parse_result.append(json_result)
 
     return parse_result
